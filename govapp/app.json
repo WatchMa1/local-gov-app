@@ -1,0 +1,62 @@
+{
+  "expo": {
+    "name": "Ministry of Local Government App",
+    "slug": "molg-app",
+    "version": "1.0.2",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+  
+    "android": {
+      "versionCode": 5,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.INTERNET",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.thirtythirdstar.nyumbayanga",
+      "splash": {
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff",
+        "mdpi": {
+          "image": "./assets/splash-mdpi.png"
+        },
+        "hdpi": {
+          "image": "./assets/splash-hdpi.png"
+        },
+        "xhdpi": {
+          "image": "./assets/splash-xhdpi.png"
+        },
+        "xxhdpi": {
+          "image": "./assets/splash-xxhdpi.png"
+        },
+        "xxxhdpi": {
+          "image": "./assets/splash-xxxhdpi.png"
+        }
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you select images for property listings."
+        }
+      ]
+    ]
+
+  }
+}
