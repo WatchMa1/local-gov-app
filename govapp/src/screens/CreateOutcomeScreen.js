@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { View, TextInput, Button, Alert } from 'react-native';
 import axios from 'axios';
-import {IP_ADDRESS, PORT, PROTOCAL} from '../utils';
+//import { IP_ADDRESS, PORT, PROTOCAL } from '../utils';
 
 const CreateOutcomeScreen = () => {
     const [outcomeName, setOutcomeName] = useState('');
@@ -9,7 +9,7 @@ const CreateOutcomeScreen = () => {
     // Wrap createOutcome with useCallback to prevent it from re-creating on every render
     const createOutcome = useCallback(async () => {
         try {
-            const response = await axios.post(PROTOCAL+IP_ADDRESS+PORT+'/outcomes', { 
+            const response = await axios.post('http://10.10.30.188:3000/outcomes', {
                 name: outcomeName,
             });
             Alert.alert('Success', `Outcome created with ID: ${response.data.id}`);

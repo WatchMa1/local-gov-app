@@ -4,23 +4,24 @@ import SearchBar from '../components/SearchBar';
 import PropertyCard from '../components/PropertyCard';
 
 import LoadingAnimation from '../components/LoadingAnimation';
+import DashboardCards from '../components/PropertyCard';
 
 const HomeScreen = ({ navigation, }) => {
   const [loading, setLoading] = useState(true);
 
-  if (loading) {
+/* if (loading) {
     return (
       <View style={styles.loadingContainer}>
         <LoadingAnimation />
       </View>
     );
   }
-
+*/
 
   return (
     <SafeAreaView style={styles.container}>
-      <SearchBar screen="Home" />
-      <PropertyCard />
+     
+      <DashboardCards />
     </SafeAreaView>
   );
 };

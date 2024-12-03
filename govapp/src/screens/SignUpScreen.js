@@ -15,18 +15,7 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import {
-  doc,
-  setDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-} from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../FirebaseConfig';
-import { signOut } from 'firebase/auth';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -115,7 +104,6 @@ const SignupScreen = ({ navigation }) => {
       }
 
       const userCredential = await createUserWithEmailAndPassword(
-        FIREBASE_AUTH,
         email,
         password
       );
@@ -147,8 +135,6 @@ const SignupScreen = ({ navigation }) => {
         email,
         role,
       });
-
-      await signOut(FIREBASE_AUTH);
       alert('Account created successfully! Please log in.');
       navigation.navigate('Login', { username: username });
     } catch (authError) {
