@@ -1,5 +1,6 @@
 {
   "expo": {
+    "newArchEnabled": true,
     "name": "Ministry of Local Government App",
     "slug": "molg-app",
     "version": "1.0.2",

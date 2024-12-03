@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, TextInput, Modal } from 'react-native';
 
@@ -7,7 +8,7 @@ const DevelopmentOutcomesScreen = () => {
   const [currentOutcome, setCurrentOutcome] = useState(null);
   const [outcomeTitle, setOutcomeTitle] = useState('');
 
-  const API_URL = 'http://10.10.30.188:3000/outcomes'; // Replace with your actual API URL
+  const API_URL = 'http://192.168.163.102:3000/outcomes'; // Replace with your actual API URL
 
   useEffect(() => {
     fetchOutcomes();
@@ -46,6 +47,7 @@ const DevelopmentOutcomesScreen = () => {
       console.error('Error creating outcome:', error);
     }
   };
+
 
   const handleEditOutcome = (outcome) => {
     setCurrentOutcome(outcome);
@@ -111,7 +113,7 @@ const DevelopmentOutcomesScreen = () => {
 
   const renderOutcome = ({ item }) => (
     <View style={styles.outcomeContainer}>
-      <Text style={styles.outcomeText}>{item.title}</Text>
+      <Text style={styles.outcomeText}>{item.name}</Text>
       <View style={styles.actions}>
         <TouchableOpacity onPress={() => handleEditOutcome(item)} style={[styles.button, styles.editButton]}>
           <Text style={styles.buttonText}>Edit</Text>
@@ -143,36 +145,36 @@ const DevelopmentOutcomesScreen = () => {
         contentContainerStyle={styles.listContainer}
       />
       <Modal visible={modalVisible} animationType="slide" transparent>
-  <View style={styles.modalOverlay}>
-    <View style={styles.modalContent}>
-      <Text style={styles.modalTitle}>{currentOutcome ? 'Edit Outcome' : 'Create Outcome'}</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Outcome Title"
-        value={outcomeTitle}
-        onChangeText={setOutcomeTitle}
-      />
-      <View style={styles.modalActions}>
-        <TouchableOpacity
-          style={[styles.modalButton, styles.cancelButton]}
-          onPress={() => {
-            setModalVisible(false);
-            setOutcomeTitle('');
-            setCurrentOutcome(null);
-          }}
-        >
-          <Text style={styles.buttonText}>Cancel</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.modalButton, styles.saveButton]}
-          onPress={currentOutcome ? handleUpdateOutcome : handleCreateOutcome}
-        >
-          <Text style={styles.buttonText}>Save</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  </View>
-</Modal>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>{currentOutcome ? 'Edit Outcome' : 'Create Outcome'}</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Outcome Title"
+              value={outcomeTitle}
+              onChangeText={setOutcomeTitle}
+            />
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.cancelButton]}
+                onPress={() => {
+                  setModalVisible(false);
+                  setOutcomeTitle('');
+                  setCurrentOutcome(null);
+                }}
+              >
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.saveButton]}
+                onPress={currentOutcome ? handleUpdateOutcome : handleCreateOutcome}
+              >
+                <Text style={styles.buttonText}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -221,7 +223,7 @@ const styles = StyleSheet.create({
   },
   outcomeText: {
     fontSize: 16,
-    color: '#333',
+    color: '#3F51B5',
     flex: 1,
   },
   actions: {
