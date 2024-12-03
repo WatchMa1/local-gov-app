@@ -14,7 +14,7 @@ const CustomHeader = ({ title }) => {
         onPress={() => setIsMenuVisible(!isMenuVisible)}
         style={styles.menuButton}
       >
-        <Ionicons name="menu" size={24} color="#FFA500" />
+        <Ionicons name="menu" size={24} color="#1b2c00" />
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
       <View style={styles.rightContainer}>
@@ -22,7 +22,7 @@ const CustomHeader = ({ title }) => {
           onPress={() => navigation.navigate('Entertainment')}
           style={styles.entertainmentButton}
         >
-          <MaterialCommunityIcons name="movie-open" size={24} color="#FFA500" />
+          <MaterialCommunityIcons name="movie-open" size={24} color="#1b2c00" />
         </TouchableOpacity>
       </View>
 
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#1b2c00',
+    backgroundColor: '#f4f0f4',
     paddingVertical: 10,
     paddingTop: 40,
     paddingHorizontal: 25,
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   title: {
-    color: '#f46500',
+    color: '#1b2c00',
     fontSize: 20,
     fontWeight: 'bold',
   },
@@ -157,6 +157,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 10,
   },
+  entertainmentButton:{
+    color: '#1b2c00',
+  }
 });
 
 export default CustomHeader;

@@ -11,6 +11,11 @@ import ProfileScreen from './src/screens/ProfileScreen';
 import StartupScreen from './src/screens/StartupScreen';
 import AboutScreen from './src/screens/AboutScreen';
 import CreateOutcomeScreen from './src/screens/CreateOutcomeScreen';
+import DevelopmentOutcomesScreen from './src/screens/AdminScreens/DevelopmentOutComesScreen';
+import Wards from './src/screens/AdminScreens/WardsScreen';
+import Indicators from './src/screens/AdminScreens/IndicatorsScreen';
+import Users from './src/screens/AdminScreens/UsersScreen';
+import Roles from './src/screens/AdminScreens/RolesScreen';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -79,9 +84,9 @@ function MainTabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarStyle: {
-          backgroundColor: '#1b2c00',
+          backgroundColor: '#f4f0f4',
         },
-        tabBarActiveTintColor: '#f4f0f4',
+        tabBarActiveTintColor: '#1b2c00',
         tabBarInactiveTintColor: '#f46500',
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -140,6 +145,11 @@ function MainStackNavigator() {
       <Stack.Screen name="About" component={AboutScreen} />
       <Stack.Screen name="Tables" component={TablesScreen} />
       <Stack.Screen name="Charts" component={ChartsScreen} />
+      <Stack.Screen name="DevelopmentOutcomes" component={DevelopmentOutcomesScreen} />
+      <Stack.Screen name="Indicators" component={Indicators} />
+      <Stack.Screen name="Wards" component={Wards} />
+      <Stack.Screen name="Users" component={Users} />
+      <Stack.Screen name="Roles" component={Roles} />
       <Stack.Screen name="CreateOutcome" component={CreateOutcomeScreen} />
     </Stack.Navigator>
   );

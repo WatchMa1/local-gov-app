@@ -9,14 +9,16 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#ffffff",
+      "color": "#ffffff"
     },
   
     "android": {
       "versionCode": 5,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "color": "#ffffff"
       },
       "permissions": [
         "android.permission.CAMERA",
@@ -29,6 +31,7 @@
       "splash": {
         "resizeMode": "contain",
         "backgroundColor": "#ffffff",
+        "color": "#ffffff",
         "mdpi": {
           "image": "./assets/splash-mdpi.png"
         },
