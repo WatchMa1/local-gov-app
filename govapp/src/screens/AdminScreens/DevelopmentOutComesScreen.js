@@ -8,7 +8,7 @@ const DevelopmentOutcomesScreen = () => {
   const [currentOutcome, setCurrentOutcome] = useState(null);
   const [outcomeTitle, setOutcomeTitle] = useState('');
 
-  const API_URL = 'http://192.168.163.102:3000/outcomes'; // Replace with your actual API URL
+  const API_URL = 'http://10.10.30.188:3000/outcomes'; // Replace with your actual API URL
 
   useEffect(() => {
     fetchOutcomes();
@@ -29,14 +29,26 @@ const DevelopmentOutcomesScreen = () => {
       Alert.alert('Validation Error', 'Outcome title is required.');
       return;
     }
+  
     try {
+      console.log('Sending request to API:', API_URL);
+      console.log('Request body:', { name: outcomeTitle });
+  
       const response = await fetch(API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ name: outcomeTitle }),
       });
+  
+      const responseText = await response.text();
+      console.log('Response status:', response.status);
+      console.log('Response text:', responseText);
+  
       if (response.ok) {
-        const newOutcome = await response.json();
+        const newOutcome = JSON.parse(responseText);
         setOutcomes([...outcomes, newOutcome]);
         setModalVisible(false);
         setOutcomeTitle('');
@@ -44,11 +56,11 @@ const DevelopmentOutcomesScreen = () => {
         Alert.alert('Error', 'Failed to create outcome.');
       }
     } catch (error) {
-      console.error('Error creating outcome:', error);
+      console.error('Error creating outcome:', error.message);
+      Alert.alert('Error', 'An unexpected error occurred.');
     }
   };
-
-
+  
   const handleEditOutcome = (outcome) => {
     setCurrentOutcome(outcome);
     setOutcomeTitle(outcome.title);

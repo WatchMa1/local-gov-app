@@ -2,13 +2,13 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./db');
 const app = express();
-/*const corsOptions = {
-    origin: '*', 
-    methods: 'GET,POST,PUT,DELETE',
-    allowedHeaders: 'Content-Type,Authorization',
-  };*/
+const corsOptions = {
+    origin: 'exp://10.10.30.188:8081',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+};
 
-app.use(cors({origin: true, credentials: true}));
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Example route to test database connection
@@ -40,19 +40,28 @@ app.get('/outcomes/:id', (req, res) => {
 });
 
 app.post('/outcomes', (req, res) => {
+    console.log('Request body:', req.body); // Add this to debug
     const { name } = req.body;
+    if (!name) {
+        return res.status(400).json({ error: 'Name is required' });
+    }
     const sql = 'INSERT INTO outcomes (name, created_by, status) VALUES (?, ?, ?)';
-    db.query(sql, [name, 'admin', 1], (err, result) => {
-        if (err) return res.status(500).json({ error: 'Database error' });
+    db.query(sql, [name, 1, 1], (err, result) => {
+        if (err) {
+            console.error('Database error:', err); // Log detailed error info
+            return res.status(500).json({ error: 'Database error' });
+        }
+        console.log('Insert result:', result); // Log the result of the query
         res.status(201).json({ id: result.insertId, name });
     });
 });
+
 
 app.put('/outcomes/:id', (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
     const sql = 'UPDATE outcomes SET name = ?, date_modified = NOW(), modified_by = ? WHERE id = ?';
-    db.query(sql, [name, 'admin', id], (err, result) => {
+    db.query(sql, [name, 1, id], (err, result) => {
         if (err) return res.status(500).json({ error: 'Database error' });
         res.json({ message: 'Outcome updated successfully' });
     });
@@ -87,7 +96,7 @@ app.get('/indicators/:id', (req, res) => {
 app.post('/indicators', (req, res) => {
     const { name, outcome_id } = req.body;
     const sql = 'INSERT INTO indicators (name, outcome_id, created_by, status) VALUES (?, ?, ?, ?)';
-    db.query(sql, [name, outcome_id, 'admin', 1], (err, result) => {
+    db.query(sql, [name, outcome_id, 1, 1], (err, result) => {
         if (err) return res.status(500).json({ error: 'Database error' });
         res.status(201).json({ id: result.insertId, name });
     });
@@ -97,7 +106,7 @@ app.put('/indicators/:id', (req, res) => {
     const { id } = req.params;
     const { name, outcome_id } = req.body;
     const sql = 'UPDATE indicators SET name = ?, outcome_id = ?, date_modified = NOW(), modified_by = ? WHERE id = ?';
-    db.query(sql, [name, outcome_id, 'admin', id], (err, result) => {
+    db.query(sql, [name, outcome_id, 1, id], (err, result) => {
         if (err) return res.status(500).json({ error: 'Database error' });
         res.json({ message: 'Indicator updated successfully' });
     });
@@ -129,10 +138,15 @@ app.get('/wards/:id', (req, res) => {
 });
 
 app.post('/wards', (req, res) => {
-    const { name, district_id } = req.body;
-    const sql = 'INSERT INTO wards (name, district_id, created_by, status) VALUES (?, ?, ?, ?)';
-    db.query(sql, [name, district_id, 'admin', 1], (err, result) => {
-        if (err) return res.status(500).json({ error: 'Database error' });
+    console.log('Request body:', req.body);
+    const { name, indicator_id } = req.body;
+    const sql = 'INSERT INTO wards (ward_name , indicator_id, created_by, status) VALUES (?, ?, ?, ?)';
+    db.query(sql, [name, indicator_id, 1, 1], (err, result) => {
+        if (err) {
+            console.error('Database error:', err); // Log detailed error info
+            return res.status(500).json({ error: 'Database error' });
+        }
+        console.log('Insert result:', result);
         res.status(201).json({ id: result.insertId, name });
     });
 });
@@ -141,7 +155,7 @@ app.put('/wards/:id', (req, res) => {
     const { id } = req.params;
     const { name, district_id } = req.body;
     const sql = 'UPDATE wards SET name = ?, district_id = ?, date_modified = NOW(), modified_by = ? WHERE id = ?';
-    db.query(sql, [name, district_id, 'admin', id], (err, result) => {
+    db.query(sql, [name, district_id, 1, id], (err, result) => {
         if (err) return res.status(500).json({ error: 'Database error' });
         res.json({ message: 'Ward updated successfully' });
     });
@@ -175,7 +189,7 @@ app.get('/tablestatistics/:id', (req, res) => {
 app.post('/tablestatistics', (req, res) => {
     const { table_name, record_count } = req.body;
     const sql = 'INSERT INTO tablestatistics (table_name, record_count, created_by, status) VALUES (?, ?, ?, ?)';
-    db.query(sql, [table_name, record_count, 'admin', 1], (err, result) => {
+    db.query(sql, [table_name, record_count, 1, 1], (err, result) => {
         if (err) return res.status(500).json({ error: 'Database error' });
         res.status(201).json({ id: result.insertId, table_name });
     });
@@ -185,7 +199,7 @@ app.put('/tablestatistics/:id', (req, res) => {
     const { id } = req.params;
     const { table_name, record_count } = req.body;
     const sql = 'UPDATE tablestatistics SET table_name = ?, record_count = ?, date_modified = NOW(), modified_by = ? WHERE id = ?';
-    db.query(sql, [table_name, record_count, 'admin', id], (err, result) => {
+    db.query(sql, [table_name, record_count, 1, id], (err, result) => {
         if (err) return res.status(500).json({ error: 'Database error' });
         res.json({ message: 'Table statistic updated successfully' });
     });

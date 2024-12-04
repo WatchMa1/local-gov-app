@@ -1,5 +1,5 @@
 {
-  "name": "housefinder",
+  "name": "molg_app",
   "version": "1.0.1",
   "main": "expo/AppEntry.js",
   "scripts": {
@@ -10,11 +10,12 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/config-plugins": "~9.0.0",
     "@expo/vector-icons": "^14.0.3",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/blur": "^4.4.0",
     "@react-native-community/netinfo": "11.4.1",
-    "@react-native-picker/picker": "2.9.0",
+    "@react-native-picker/picker": "^2.9.0",
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/drawer": "^6.7.2",
     "@react-navigation/native": "^6.1.18",
@@ -30,7 +31,6 @@
     "expo-status-bar": "~2.0.0",
     "qs": "^6.13.0",
     "react": "18.3.1",
-    "react-native": "^0.76.3",
     "react-native-animatable": "^1.4.0",
     "react-native-chart-kit": "^6.12.0",
     "react-native-dropdown-picker": "^5.4.6",
@@ -60,6 +60,7 @@
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@eslint/js": "^9.10.0",
+    "@react-native-community/cli": "latest",
     "@types/qs": "^6.9.16",
     "@types/react-native-snap-carousel": "^3.8.11",
     "eslint": "^9.10.0",
