@@ -1,40 +1,37 @@
-import React, { useState, useCallback } from 'react';
-import { View, TextInput, Button, Alert } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, TextInput, Button, Alert, Text, FlatList } from 'react-native';
 import axios from 'axios';
 //import { IP_ADDRESS, PORT, PROTOCAL } from '../utils';
 
 const CreateOutcomeScreen = () => {
     const [outcomeName, setOutcomeName] = useState('');
+    const [outcomes, setOutcomes] = useState([]);
 
-    // Wrap createOutcome with useCallback to prevent it from re-creating on every render
-    const createOutcome = useCallback(async () => {
-        try {
-            const response = await axios.post('http://10.10.30.188:3000/outcomes', {
-                name: outcomeName,
-            });
-            Alert.alert('Success', `Outcome created with ID: ${response.data.id}`);
-            setOutcomeName(''); // Clear the input after success
-        } catch (error) {
-            console.error('Error creating outcome:', error);
-            Alert.alert('Error', 'Could not create outcome');
-        }
-    }, [outcomeName]);
+    useEffect(() => {
+        const fetchOutcomes = async () => {
+            try {
+                const response = await axios.get('http://10.10.30.188:8000/outcomes');
+                setOutcomes(response.data);
+            } catch (error) {
+                console.error('Error fetching outcomes:', error);
+                Alert.alert('Error', 'Could not fetch outcomes');
+            }
+        };
+
+        fetchOutcomes();
+    }, []);
 
     return (
         <View style={{ padding: 20 }}>
-            <TextInput
-                placeholder="Enter outcome name"
-                value={outcomeName}
-                onChangeText={setOutcomeName}
-                style={{
-                    height: 40,
-                    borderColor: 'gray',
-                    borderWidth: 1,
-                    marginBottom: 12,
-                    paddingHorizontal: 8,
-                }}
+            <FlatList
+                data={outcomes}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                    <View style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: 'gray' }}>
+                        <Text>{item.name}</Text>
+                    </View>
+                )}
             />
-            <Button title="Create Outcome" onPress={createOutcome} />
         </View>
     );
 };

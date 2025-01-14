@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, FlatList, Text, StyleSheet, SafeAreaView, Alert } from 'react-native';
 import SearchBar from '../components/SearchBar';
-import PropertyCard from '../components/PropertyCard';
+import PropertyCard from '../components/OutComesCard';
 
 import LoadingAnimation from '../components/LoadingAnimation';
-import DashboardCards from '../components/PropertyCard';
+import DashboardCards from '../components/OutComesCard';
 
 const HomeScreen = ({ navigation, }) => {
   const [loading, setLoading] = useState(true);
@@ -20,7 +20,6 @@ const HomeScreen = ({ navigation, }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-     
       <DashboardCards />
     </SafeAreaView>
   );

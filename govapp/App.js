@@ -13,9 +13,10 @@ import AboutScreen from './src/screens/AboutScreen';
 import CreateOutcomeScreen from './src/screens/CreateOutcomeScreen';
 import DevelopmentOutcomesScreen from './src/screens/AdminScreens/DevelopmentOutComesScreen';
 import Wards from './src/screens/AdminScreens/WardsScreen';
-import Indicators from './src/screens/AdminScreens/IndicatorsScreen';
 import Users from './src/screens/AdminScreens/UsersScreen';
 import Roles from './src/screens/AdminScreens/RolesScreen';
+import IndicatorsScreen from './src/screens/IndicatorsScreen';
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -78,6 +79,25 @@ function TablesStack() {
   );
 }
 
+function IndicatorsStack() {
+  const [showSearch, setShowSearch] = React.useState(false);
+
+  return (
+    <Stack.Navigator
+      screenOptions={({ route }) => ({
+        header: ({ navigation }) => (
+          <CustomHeader
+            title={route.name}
+            showSearch={showSearch}
+            setShowSearch={setShowSearch}
+          />
+        ),
+      })}
+    >
+      <Stack.Screen name="Indicators" component={IndicatorsScreen} />
+    </Stack.Navigator>
+  );
+}
 
 function MainTabNavigator() {
   return (
@@ -96,6 +116,8 @@ function MainTabNavigator() {
             iconName = focused ? 'stats-chart' : 'stats-chart-outline';
           } else if (route.name === 'Tables') {
             iconName = focused ? 'grid' : 'grid-outline';
+          } else if (route.name === 'Indicators') {
+            iconName = focused ? 'analytics' : 'analytics-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -117,11 +139,15 @@ function MainTabNavigator() {
         component={TablesStack}
         options={{ headerShown: false }}
       />
-
-      {/* <Tab.Screen name="Chat" component={ChatScreen} /> */}
+      <Tab.Screen
+        name="Indicators"
+        component={IndicatorsStack}
+        options={{ headerShown: false }}
+      />
     </Tab.Navigator>
   );
 }
+
 function MainStackNavigator() {
   return (
     <Stack.Navigator
@@ -130,8 +156,7 @@ function MainStackNavigator() {
           <CustomHeader
             title={route.name}
             showSearch={false}
-            setShowSearch={() => { }}   
-
+            setShowSearch={() => {}}
           />
         ),
       })}
@@ -141,12 +166,13 @@ function MainStackNavigator() {
         children={(props) => <MainTabNavigator {...props} />}
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="IndicatorsScreen" component={IndicatorsScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="About" component={AboutScreen} />
       <Stack.Screen name="Tables" component={TablesScreen} />
       <Stack.Screen name="Charts" component={ChartsScreen} />
       <Stack.Screen name="DevelopmentOutcomes" component={DevelopmentOutcomesScreen} />
-      <Stack.Screen name="Indicators" component={Indicators} />
       <Stack.Screen name="Wards" component={Wards} />
       <Stack.Screen name="Users" component={Users} />
       <Stack.Screen name="Roles" component={Roles} />
@@ -156,9 +182,7 @@ function MainStackNavigator() {
 }
 
 function App() {
-
   const [isLoading, setIsLoading] = React.useState(true);
-
 
   // Handle the startup screen timeout
   const handleStartupScreenTimeout = () => {
@@ -176,7 +200,5 @@ function App() {
     </NavigationContainer>
   );
 }
-
-
 
 export default App;

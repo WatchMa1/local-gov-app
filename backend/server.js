@@ -3,7 +3,7 @@ const cors = require('cors');
 const db = require('./db');
 const app = express();
 const corsOptions = {
-    origin: 'exp://10.10.30.188:8081',
+    origin: 'exp://192.168.163.102:8081',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 };
