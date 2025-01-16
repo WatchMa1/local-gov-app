@@ -3,43 +3,43 @@ import { View, Text, FlatList, Alert, StyleSheet, TouchableOpacity } from 'react
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
-const IndicatorsCard = ({ route }) => {
-  const { outcomeId, outcomeName } = route.params;
-  const [indicators, setIndicators] = useState([]);
+const DistrictCard = ({ route }) => {
+  const { provinceId, provinceName } = route.params;
+  const [districts, setDistricts] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchIndicators = async () => {
+    const fetchDistricts = async () => {
       try {
-        const response = await axios.get(`http://192.168.17.102:8000/api/outcomes/${outcomeId}/indicators`);
+        const response = await axios.get(`http://192.168.17.102:8000/api/provinces/${provinceId}/districts`);
         console.log('API Response:', response.data); // Debugging: Log the API response
-        setIndicators(response.data); // Ensure results is an array
+        setDistricts(response.data); // Ensure results is an array
       } catch (error) {
-        console.error('Error fetching indicators:', error);
-        Alert.alert('Error', 'Could not fetch indicators');
+        console.error('Error fetching districts:', error);
+        Alert.alert('Error', 'Could not fetch districts');
       }
     };
 
-    fetchIndicators();
-  }, [outcomeId]);
+    fetchDistricts();
+  }, [provinceId]);
 
-  const handleIndicatorPress = (indicatorId, indicatorName) => {
-    navigation.navigate('ProvincesScreen', { indicatorId, indicatorName });
+  const handleDistrictPress = (districtId, districtName) => {
+    navigation.navigate('ConstituencyScreen', { districtId, districtName });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{outcomeName}</Text>
-      {indicators.length === 0 ? ( // Debugging: Check if indicators array is empty
-        <Text>No indicators found</Text>
+      <Text style={styles.title}>{provinceName}</Text>
+      {districts.length === 0 ? ( // Debugging: Check if districts array is empty
+        <Text>No districts found</Text>
       ) : (
         <FlatList
-          data={indicators}
+          data={districts}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleIndicatorPress(item.id, item.name)}>
-              <View style={styles.indicatorContainer}>
-                <Text style={styles.indicatorText}>{item.name}</Text>
+            <TouchableOpacity onPress={() => handleDistrictPress(item.id, item.name)}>
+              <View style={styles.districtContainer}>
+                <Text style={styles.districtText}>{item.name}</Text>
               </View>
             </TouchableOpacity>
           )}
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#070d2d',
   },
-  indicatorContainer: {
+  districtContainer: {
     backgroundColor: '#fff',
     padding: 15,
     marginBottom: 10,
@@ -73,10 +73,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  indicatorText: {
+  districtText: {
     fontSize: 16,
     color: '#3F51B5',
   },
 });
 
-export default IndicatorsCard;
+export default DistrictCard;

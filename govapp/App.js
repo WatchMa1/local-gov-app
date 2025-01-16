@@ -11,11 +11,11 @@ import ProfileScreen from './src/screens/ProfileScreen';
 import StartupScreen from './src/screens/StartupScreen';
 import AboutScreen from './src/screens/AboutScreen';
 import CreateOutcomeScreen from './src/screens/CreateOutcomeScreen';
-import DevelopmentOutcomesScreen from './src/screens/AdminScreens/DevelopmentOutComesScreen';
-import Wards from './src/screens/AdminScreens/WardsScreen';
-import Users from './src/screens/AdminScreens/UsersScreen';
-import Roles from './src/screens/AdminScreens/RolesScreen';
 import IndicatorsScreen from './src/screens/IndicatorsScreen';
+import ProvincesScreen from './src/screens/ProvincesScreen';
+import DistrictScreen from './src/screens/DistrictScreen';
+import ConstituencyScreen from './src/screens/ConstituencyScreen';
+import WardsScreen from './src/screens/WardsScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -167,15 +167,15 @@ function MainStackNavigator() {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="ProvincesScreen" component={ProvincesScreen} />
+      <Stack.Screen name="DistrictScreen" component={DistrictScreen} />
+      <Stack.Screen name="ConstituencyScreen" component={ConstituencyScreen} />
+      <Stack.Screen name="WardsScreen" component={WardsScreen} />
       <Stack.Screen name="IndicatorsScreen" component={IndicatorsScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="About" component={AboutScreen} />
       <Stack.Screen name="Tables" component={TablesScreen} />
       <Stack.Screen name="Charts" component={ChartsScreen} />
-      <Stack.Screen name="DevelopmentOutcomes" component={DevelopmentOutcomesScreen} />
-      <Stack.Screen name="Wards" component={Wards} />
-      <Stack.Screen name="Users" component={Users} />
-      <Stack.Screen name="Roles" component={Roles} />
       <Stack.Screen name="CreateOutcome" component={CreateOutcomeScreen} />
     </Stack.Navigator>
   );

@@ -3,43 +3,43 @@ import { View, Text, FlatList, Alert, StyleSheet, TouchableOpacity } from 'react
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
-const IndicatorsCard = ({ route }) => {
-  const { outcomeId, outcomeName } = route.params;
-  const [indicators, setIndicators] = useState([]);
+const WardCard = ({ route }) => {
+  const { constituencyId, constituencyName } = route.params;
+  const [wards, setWards] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchIndicators = async () => {
+    const fetchWards = async () => {
       try {
-        const response = await axios.get(`http://192.168.17.102:8000/api/outcomes/${outcomeId}/indicators`);
+        const response = await axios.get(`http://192.168.17.102:8000/api/constituencies/${constituencyId}/wards`);
         console.log('API Response:', response.data); // Debugging: Log the API response
-        setIndicators(response.data); // Ensure results is an array
+        setWards(response.data); // Ensure results is an array
       } catch (error) {
-        console.error('Error fetching indicators:', error);
-        Alert.alert('Error', 'Could not fetch indicators');
+        console.error('Error fetching wards:', error);
+        Alert.alert('Error', 'Could not fetch wards');
       }
     };
 
-    fetchIndicators();
-  }, [outcomeId]);
+    fetchWards();
+  }, [constituencyId]);
 
-  const handleIndicatorPress = (indicatorId, indicatorName) => {
-    navigation.navigate('ProvincesScreen', { indicatorId, indicatorName });
+  const handleWardPress = (wardId, wardName) => {
+    navigation.navigate('WardDetailScreen', { wardId, wardName });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{outcomeName}</Text>
-      {indicators.length === 0 ? ( // Debugging: Check if indicators array is empty
-        <Text>No indicators found</Text>
+      <Text style={styles.title}>{constituencyName}</Text>
+      {wards.length === 0 ? ( // Debugging: Check if wards array is empty
+        <Text>No wards found</Text>
       ) : (
         <FlatList
-          data={indicators}
+          data={wards}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleIndicatorPress(item.id, item.name)}>
-              <View style={styles.indicatorContainer}>
-                <Text style={styles.indicatorText}>{item.name}</Text>
+            <TouchableOpacity onPress={() => handleWardPress(item.id, item.ward_name)}>
+              <View style={styles.wardContainer}>
+                <Text style={styles.wardText}>{item.ward_name}</Text>
               </View>
             </TouchableOpacity>
           )}
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#070d2d',
   },
-  indicatorContainer: {
+  wardContainer: {
     backgroundColor: '#fff',
     padding: 15,
     marginBottom: 10,
@@ -73,10 +73,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  indicatorText: {
+  wardText: {
     fontSize: 16,
     color: '#3F51B5',
   },
 });
 
-export default IndicatorsCard;
+export default WardCard;

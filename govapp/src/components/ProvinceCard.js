@@ -3,43 +3,43 @@ import { View, Text, FlatList, Alert, StyleSheet, TouchableOpacity } from 'react
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
-const IndicatorsCard = ({ route }) => {
-  const { outcomeId, outcomeName } = route.params;
-  const [indicators, setIndicators] = useState([]);
+const ProvinceCard = ({ route }) => {
+  const { indicatorId, indicatorName } = route.params;
+  const [provinces, setProvinces] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchIndicators = async () => {
+    const fetchProvinces = async () => {
       try {
-        const response = await axios.get(`http://192.168.17.102:8000/api/outcomes/${outcomeId}/indicators`);
+        const response = await axios.get(`http://192.168.17.102:8000/api/provinces`);
         console.log('API Response:', response.data); // Debugging: Log the API response
-        setIndicators(response.data); // Ensure results is an array
+        setProvinces(response.data.results); // Ensure results is an array
       } catch (error) {
-        console.error('Error fetching indicators:', error);
-        Alert.alert('Error', 'Could not fetch indicators');
+        console.error('Error fetching provinces:', error);
+        Alert.alert('Error', 'Could not fetch provinces');
       }
     };
 
-    fetchIndicators();
-  }, [outcomeId]);
+    fetchProvinces();
+  }, [indicatorId]);
 
-  const handleIndicatorPress = (indicatorId, indicatorName) => {
-    navigation.navigate('ProvincesScreen', { indicatorId, indicatorName });
+  const handleDistrictPress = (provinceId, provinceName) => {
+    navigation.navigate('DistrictScreen', { provinceId, provinceName });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{outcomeName}</Text>
-      {indicators.length === 0 ? ( // Debugging: Check if indicators array is empty
-        <Text>No indicators found</Text>
+      <Text style={styles.title}>{indicatorName}</Text>
+      {provinces.length === 0 ? ( // Debugging: Check if provinces array is empty
+        <Text>No provinces found</Text>
       ) : (
         <FlatList
-          data={indicators}
+          data={provinces}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleIndicatorPress(item.id, item.name)}>
-              <View style={styles.indicatorContainer}>
-                <Text style={styles.indicatorText}>{item.name}</Text>
+            <TouchableOpacity onPress={() => handleDistrictPress(item.id, item.name)}>
+              <View style={styles.provinceContainer}>
+                <Text style={styles.provinceText}>{item.name}</Text>
               </View>
             </TouchableOpacity>
           )}
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#070d2d',
   },
-  indicatorContainer: {
+  provinceContainer: {
     backgroundColor: '#fff',
     padding: 15,
     marginBottom: 10,
@@ -73,10 +73,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  indicatorText: {
+  provinceText: {
     fontSize: 16,
     color: '#3F51B5',
   },
 });
 
-export default IndicatorsCard;
+export default ProvinceCard;

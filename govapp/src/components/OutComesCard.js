@@ -22,8 +22,8 @@ const DashboardCards = () => {
         fetchOutcomes();
     }, []);
 
-    const handleCardPress = (outcomeId) => {
-        navigation.navigate('IndicatorsScreen', { outcomeId });
+    const handleCardPress = (outcomeId, outcomeName) => {
+        navigation.navigate('IndicatorsScreen', { outcomeId, outcomeName });
     };
 
     const colors = ['#3F51B5'];
@@ -36,7 +36,7 @@ const DashboardCards = () => {
                 renderItem={({ item, index }) => {
                     const color = colors[index % colors.length]; // Cycle through colors
                     return (
-                        <TouchableOpacity onPress={() => handleCardPress(item.id)}>
+                        <TouchableOpacity onPress={() => handleCardPress(item.id, item.name)}>
                             <Card containerStyle={[styles.card, { borderColor: color }]}>
                                 <View style={styles.cardHeader}>
                                     <Icon name="trending-up" type="material" size={28} color={color} />
