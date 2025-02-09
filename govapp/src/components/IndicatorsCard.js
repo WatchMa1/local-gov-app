@@ -11,7 +11,7 @@ const IndicatorsCard = ({ route }) => {
   useEffect(() => {
     const fetchIndicators = async () => {
       try {
-        const response = await axios.get(`http://192.168.17.102:8000/api/outcomes/${outcomeId}/indicators`);
+        const response = await axios.get(`http://192.168.191.102:8000/api/outcomes/${outcomeId}/indicators`);
         console.log('API Response:', response.data); // Debugging: Log the API response
         setIndicators(response.data); // Ensure results is an array
       } catch (error) {

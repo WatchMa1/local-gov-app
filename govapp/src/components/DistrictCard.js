@@ -11,7 +11,7 @@ const DistrictCard = ({ route }) => {
   useEffect(() => {
     const fetchDistricts = async () => {
       try {
-        const response = await axios.get(`http://192.168.17.102:8000/api/provinces/${provinceId}/districts`);
+        const response = await axios.get(`http://192.168.191.102:8000/api/provinces/${provinceId}/districts`);
         console.log('API Response:', response.data); // Debugging: Log the API response
         setDistricts(response.data); // Ensure results is an array
       } catch (error) {

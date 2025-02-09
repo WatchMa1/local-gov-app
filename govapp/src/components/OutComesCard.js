@@ -11,7 +11,7 @@ const DashboardCards = () => {
     useEffect(() => {
         const fetchOutcomes = async () => {
             try {
-                const response = await axios.get('http://192.168.17.102:8000/api/outcomes');
+                const response = await axios.get('http://192.168.191.102:8000/api/outcomes');
                 setOutcomes(response.data.results); // Extract only the results array
             } catch (error) {
                 console.error('Error fetching outcomes:', error);

@@ -11,7 +11,7 @@ const ProvinceCard = ({ route }) => {
   useEffect(() => {
     const fetchProvinces = async () => {
       try {
-        const response = await axios.get(`http://192.168.17.102:8000/api/provinces`);
+        const response = await axios.get(`http://192.168.191.102:8000/api/provinces`);
         console.log('API Response:', response.data); // Debugging: Log the API response
         setProvinces(response.data.results); // Ensure results is an array
       } catch (error) {
