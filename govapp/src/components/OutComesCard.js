@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from 'react
 import { Card, Icon } from 'react-native-elements';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import { PROTOCAL, IP_ADDRESS, PORT } from '../utils/utils';
 
 const DashboardCards = () => {
     const navigation = useNavigation();
@@ -11,7 +12,7 @@ const DashboardCards = () => {
     useEffect(() => {
         const fetchOutcomes = async () => {
             try {
-                const response = await axios.get('http://192.168.191.102:8000/api/outcomes');
+                const response = await axios.get(`${PROTOCAL}${IP_ADDRESS}:${PORT}/api/outcomes`);
                 setOutcomes(response.data.results); // Extract only the results array
             } catch (error) {
                 console.error('Error fetching outcomes:', error);
@@ -26,7 +27,7 @@ const DashboardCards = () => {
         navigation.navigate('IndicatorsScreen', { outcomeId, outcomeName });
     };
 
-    const colors = ['#3F51B5'];
+    const colors = ['#1b2c00'];
 
     return (
         <View style={{ padding: 20 }}>

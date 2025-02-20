@@ -22,7 +22,7 @@ const CustomHeader = ({ title }) => {
           onPress={() => navigation.navigate('Entertainment')}
           style={styles.entertainmentButton}
         >
-          <MaterialCommunityIcons name="movie-open" size={24} color="#1b2c00" />
+          <MaterialCommunityIcons name="alert-circle-outline" size={24} color="#1b2c00" />
         </TouchableOpacity>
       </View>
 

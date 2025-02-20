@@ -1,26 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Alert, StyleSheet, TouchableOpacity, Switch } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import { Dimensions } from 'react-native';
+import { BarChart } from 'react-native-gifted-charts';
+import { PROTOCAL, IP_ADDRESS, PORT } from '../utils/utils';
 
 const ConstituencyCard = ({ route }) => {
   const { districtId, districtName } = route.params;
   const [constituencies, setConstituencies] = useState([]);
   const [averageScores, setAverageScores] = useState({});
+  const [overallAverageScore, setOverallAverageScore] = useState(0)
+  const [isChartView, setIsChartView] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
     const fetchConstituencies = async () => {
       try {
-        const response = await axios.get(`http://192.168.191.102:8000/api/districts/${districtId}/constituencies`);
+        const response = await axios.get(`${PROTOCAL}${IP_ADDRESS}:${PORT}/api/districts/${districtId}/constituencies`);
         const constituenciesData = response.data;
-        console.log('Constituencies API Response:', constituenciesData); // Debugging: Log the API response
+        //console.log('Constituencies API Response:', constituenciesData); // Debugging: Log the API response
 
         // Fetch ward scores for each constituency
         const fetchWardScores = async (constituencyId) => {
-          const wardScoresResponse = await axios.get(`http://192.168.191.102:8000/api/constituencies/${constituencyId}/wards`);
+          const wardScoresResponse = await axios.get(`${PROTOCAL}${IP_ADDRESS}:${PORT}/api/constituencies/${constituencyId}/wards`);
           const wardsData = wardScoresResponse.data;
-          const wardScores = await axios.get('http://192.168.191.102:8000/api/wardIndicators');
+          const wardScores = await axios.get(`${PROTOCAL}${IP_ADDRESS}:${PORT}/api/wardIndicators`);
           const wardScoresData = wardScores.data.results;
 
           // Merge ward scores with ward data
@@ -40,13 +45,16 @@ const ConstituencyCard = ({ route }) => {
 
         // Calculate average scores for all constituencies
         const averageScoresData = {};
+        let totalScore = 0;
         for (const constituency of constituenciesData) {
           const avgScore = await fetchWardScores(constituency.id);
           averageScoresData[constituency.id] = avgScore;
+          totalScore += avgScore;
         }
 
         setConstituencies(constituenciesData);
         setAverageScores(averageScoresData);
+        setOverallAverageScore(totalScore / constituenciesData.length);
       } catch (error) {
         console.error('Error fetching constituencies or ward scores:', error);
         Alert.alert('Error', 'Could not fetch constituencies or ward scores');
@@ -60,11 +68,38 @@ const ConstituencyCard = ({ route }) => {
     navigation.navigate('WardsScreen', { constituencyId, constituencyName });
   };
 
+  const toggleView = () => {
+    setIsChartView(!isChartView);
+  };
+
+  const chartData = constituencies.map(constituency => ({
+    value: averageScores[constituency.id] || 0,
+    label: constituency.name,
+    frontColor: '#177AD5',
+  }));
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{districtName}</Text>
-      {constituencies.length === 0 ? (
-        <Text>No constituencies found</Text>
+      <Text style={styles.title}>{districtName} District</Text>
+      <Text style={styles.averageScore}>Overall Average Score: {overallAverageScore.toFixed(1)}%</Text>
+      <View style={styles.toggleContainer}>
+        <Text>List View</Text>
+        <Switch value={isChartView} onValueChange={toggleView} />
+        <Text>Chart View</Text>
+      </View>
+      {isChartView ? (
+        <BarChart
+        horizontal
+        yAxisAtTop 
+        intactTopLabel
+        shiftX= {0}
+        barWidth={50}
+        frontColor="lightgray"
+        data={chartData}
+        xAxisThickness={3}
+        xAxisColor="darkgray"
+        yAxisColor={"darkgray"}
+      />
       ) : (
         <FlatList
           data={constituencies}
@@ -96,7 +131,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: '#1b2c00',
+  },
+  averageScore: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
     color: '#070d2d',
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
   },
   constituencyContainer: {
     backgroundColor: '#fff',
@@ -119,6 +167,14 @@ const styles = StyleSheet.create({
   constituencyScore: {
     fontSize: 16,
     color: '#3F51B5',
+  },
+  constituencyText: {
+    fontSize: 16,
+    color: '#1b2c00',
+  },
+  constituencyScore: {
+    fontSize: 16,
+    color: '#1b2c00',
   },
 });
 

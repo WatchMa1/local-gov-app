@@ -1,22 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Alert, StyleSheet, TouchableOpacity, Switch } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import { Dimensions } from 'react-native';
+import { BarChart } from 'react-native-gifted-charts';
+import { PROTOCAL, IP_ADDRESS, PORT } from '../utils/utils';
 
 const DistrictCard = ({ route }) => {
   const { provinceId, provinceName } = route.params;
   const [districts, setDistricts] = useState([]);
+  const [averageScores, setAverageScores] = useState({});
+  const [overallAverageScore, setOverallAverageScore] = useState(0);
+  const [isChartView, setIsChartView] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
     const fetchDistricts = async () => {
       try {
-        const response = await axios.get(`http://192.168.191.102:8000/api/provinces/${provinceId}/districts`);
-        console.log('API Response:', response.data); // Debugging: Log the API response
-        setDistricts(response.data); // Ensure results is an array
+        const response = await axios.get(`${PROTOCAL}${IP_ADDRESS}:${PORT}/api/provinces/${provinceId}/districts`);
+        const districtsData = response.data || [];
+
+        // Fetch ward scores for each district
+        const fetchWardScores = async (districtId) => {
+          const wardScoresResponse = await axios.get(`${PROTOCAL}${IP_ADDRESS}:${PORT}/api/districts/${districtId}/wards`);
+          const wardsData = wardScoresResponse.data;
+          const wardScores = await axios.get(`${PROTOCAL}${IP_ADDRESS}:${PORT}/api/wardIndicators`);
+          const wardScoresData = wardScores.data.results;
+
+          // Merge ward scores with ward data
+          const wardsWithScores = wardsData.map(ward => {
+            const wardScore = wardScoresData.find(score => score.ward === ward.id);
+            return {
+              ...ward,
+              score: wardScore && wardScore.score ? parseFloat(wardScore.score) : 0, // Default to 0 if no score found
+            };
+          });
+
+          // Calculate average score
+          const totalScore = wardsWithScores.reduce((sum, ward) => sum + ward.score, 0);
+          const avgScore = wardsWithScores.length > 0 ? totalScore / wardsWithScores.length : 0;
+          return avgScore;
+        };
+
+        // Calculate average scores for all districts
+        const averageScoresData = {};
+        let totalScore = 0;
+        for (const district of districtsData) {
+          const avgScore = await fetchWardScores(district.id);
+          averageScoresData[district.id] = avgScore;
+          totalScore += avgScore;
+        }
+
+        setDistricts(districtsData);
+        setAverageScores(averageScoresData);
+        setOverallAverageScore(totalScore / districtsData.length);
       } catch (error) {
-        console.error('Error fetching districts:', error);
-        Alert.alert('Error', 'Could not fetch districts');
+        console.error('Error fetching districts or ward scores:', error);
+        Alert.alert('Error', 'Could not fetch districts or ward scores');
       }
     };
 
@@ -27,11 +67,39 @@ const DistrictCard = ({ route }) => {
     navigation.navigate('ConstituencyScreen', { districtId, districtName });
   };
 
+  const toggleView = () => {
+    setIsChartView(!isChartView);
+  };
+
+  const chartData = districts.map(district => ({
+    value: averageScores[district.id] || 0,
+    label: district.name,
+    frontColor: '#177AD5',
+  }));
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{provinceName}</Text>
-      {districts.length === 0 ? ( // Debugging: Check if districts array is empty
-        <Text>No districts found</Text>
+      <Text style={styles.title}>{provinceName} Province</Text>
+      <Text style={styles.averageScore}>Overall Average Score: {overallAverageScore.toFixed(1)}%</Text>
+      <View style={styles.toggleContainer}>
+        <Text>List View</Text>
+        <Switch value={isChartView} onValueChange={toggleView} />
+        <Text>Chart View</Text>
+      </View>
+      {isChartView ? (
+        <BarChart
+        horizontal
+        yAxisAtTop 
+        intactTopLabel
+        shiftX= {0}
+        barWidth={50}
+        barGap={5}
+        frontColor="lightgray"
+        data={chartData}
+        xAxisThickness={3}
+        xAxisColor="darkgray"
+
+        />
       ) : (
         <FlatList
           data={districts}
@@ -40,6 +108,9 @@ const DistrictCard = ({ route }) => {
             <TouchableOpacity onPress={() => handleDistrictPress(item.id, item.name)}>
               <View style={styles.districtContainer}>
                 <Text style={styles.districtText}>{item.name}</Text>
+                <Text style={styles.districtScore}>
+                  {averageScores[item.id] ? averageScores[item.id].toFixed(1) : 'N/A'}%
+                </Text>
               </View>
             </TouchableOpacity>
           )}
@@ -60,7 +131,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: '#1b2c00',
+  },
+  averageScore: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
     color: '#070d2d',
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
   },
   districtContainer: {
     backgroundColor: '#fff',
@@ -72,10 +156,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  districtText: {
+  indicatorText: {
     fontSize: 16,
-    color: '#3F51B5',
+    color: '#1b2c00',
+  },
+  indicatorScore: {
+    fontSize: 16,
+    color: '#1b2c00',
   },
 });
 
